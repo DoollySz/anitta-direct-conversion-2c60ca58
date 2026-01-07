@@ -1,42 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import logoImage from "@/assets/logo.webp";
-
 const AgeVerification = () => {
   const navigate = useNavigate();
-
   const handleConfirmAge = () => {
     // Store verification in localStorage
     localStorage.setItem("age_verified", "true");
     navigate("/privacy");
   };
-
   const handleDenyAge = () => {
     window.location.href = "https://www.google.com";
   };
-
-  return (
-    <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4 relative overflow-hidden">
+  return <div className="min-h-screen bg-[#f5f5f5] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Decorative curves */}
       <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96">
         <svg viewBox="0 0 200 200" className="w-full h-full">
-          <path
-            d="M 180 0 Q 200 100 180 200"
-            fill="none"
-            stroke="hsl(24, 100%, 85%)"
-            strokeWidth="40"
-            strokeLinecap="round"
-          />
+          <path d="M 180 0 Q 200 100 180 200" fill="none" stroke="hsl(24, 100%, 85%)" strokeWidth="40" strokeLinecap="round" />
         </svg>
       </div>
       <div className="absolute bottom-0 left-0 w-64 h-64 md:w-96 md:h-96">
         <svg viewBox="0 0 200 200" className="w-full h-full">
-          <path
-            d="M 20 0 Q 0 100 20 200"
-            fill="none"
-            stroke="hsl(24, 100%, 85%)"
-            strokeWidth="40"
-            strokeLinecap="round"
-          />
+          <path d="M 20 0 Q 0 100 20 200" fill="none" stroke="hsl(24, 100%, 85%)" strokeWidth="40" strokeLinecap="round" />
         </svg>
       </div>
 
@@ -45,7 +28,7 @@ const AgeVerification = () => {
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-6">
           <img src={logoImage} alt="Privacy" className="h-8" />
-          <span className="text-2xl font-semibold text-gray-800">privacy</span>
+          
         </div>
 
         {/* Title */}
@@ -61,10 +44,7 @@ const AgeVerification = () => {
         </p>
 
         {/* Confirm Button */}
-        <button
-          onClick={handleConfirmAge}
-          className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-full text-sm uppercase tracking-wide transition-colors mb-4"
-        >
+        <button onClick={handleConfirmAge} className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-full text-sm uppercase tracking-wide transition-colors mb-4">
           SIM, TENHO MAIS DE 18 ANOS
         </button>
 
@@ -74,10 +54,7 @@ const AgeVerification = () => {
         </div>
 
         {/* Deny Button */}
-        <button
-          onClick={handleDenyAge}
-          className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold py-4 rounded-full text-sm uppercase tracking-wide transition-colors"
-        >
+        <button onClick={handleDenyAge} className="w-full bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-semibold py-4 rounded-full text-sm uppercase tracking-wide transition-colors">
           NÃO, SOU MENOR DE IDADE
         </button>
 
@@ -96,8 +73,6 @@ const AgeVerification = () => {
           .
         </p>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AgeVerification;
