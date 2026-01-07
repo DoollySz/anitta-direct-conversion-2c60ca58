@@ -42,13 +42,6 @@ const VideoPreview = ({ src, onClick, likes = "89.6K", comments = "7.1K" }: Vide
           </span>
         </div>
       </div>
-      
-      {/* Subscribe Text */}
-      <div className="absolute bottom-0 left-0 right-0 pb-1">
-        <p className="text-center text-[10px] text-primary font-medium">
-          Assine pra ver
-        </p>
-      </div>
     </div>
   );
 };
