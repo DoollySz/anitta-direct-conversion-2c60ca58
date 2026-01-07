@@ -51,13 +51,6 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
                 <Lock className="w-4 h-4 text-white/80" />
               </div>
             </div>
-            
-            {/* Subscribe Text */}
-            <div className="absolute bottom-2 left-0 right-0">
-              <p className="text-center text-[10px] text-primary font-medium">
-                Assine pra ver
-              </p>
-            </div>
           </div>
         ))}
         <div
@@ -68,9 +61,6 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
             <Lock className="w-4 h-4 text-muted-foreground" />
           </div>
           <span className="text-xs text-muted-foreground">+1.2K</span>
-          <p className="text-[10px] text-primary font-medium mt-1">
-            Assine pra ver
-          </p>
         </div>
       </div>
     </div>

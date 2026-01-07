@@ -1,5 +1,6 @@
 import profileImage from "@/assets/profile-anitta.png";
 import bannerImage from "@/assets/banner.png";
+import verifiedBadge from "@/assets/verified-badge.png";
 
 interface ProfileHeaderProps {
   onClickToSubscription: () => void;
@@ -39,9 +40,13 @@ const ProfileHeader = ({ onClickToSubscription }: ProfileHeaderProps) => {
         </div>
 
         <div className="mt-3 space-y-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <h1 className="text-xl font-bold text-foreground">Anitta</h1>
-            <span className="text-lg" title="Verificado">✅</span>
+            <img 
+              src={verifiedBadge} 
+              alt="Verificado" 
+              className="w-5 h-5"
+            />
           </div>
           <p className="text-muted-foreground text-sm">@anitta</p>
         </div>
