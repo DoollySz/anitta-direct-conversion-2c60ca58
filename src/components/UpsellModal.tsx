@@ -30,14 +30,14 @@ const UpsellModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-card border-border max-w-sm mx-4 p-6 rounded-2xl">
+      <DialogContent className="bg-card border-border w-[calc(100%-2rem)] max-w-sm mx-auto p-5 rounded-2xl">
         <DialogTitle className="sr-only">Oferta Especial</DialogTitle>
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-full gradient-primary flex items-center justify-center">
-            <span className="text-3xl">🔥</span>
+          <div className="w-14 h-14 mx-auto rounded-full gradient-primary flex items-center justify-center">
+            <span className="text-2xl">🔥</span>
           </div>
           
-          <h3 className="text-xl font-bold text-foreground">
+          <h3 className="text-lg font-bold text-foreground">
             Espera! Oferta Especial
           </h3>
           
@@ -55,7 +55,7 @@ const UpsellModal = ({
             </div>
             <div className="flex justify-between items-center">
               <span className="text-foreground font-semibold">Por:</span>
-              <span className="text-primary font-bold text-xl">
+              <span className="text-primary font-bold text-lg">
                 R$ {upgradePlan.price.toFixed(2).replace('.', ',')}
               </span>
             </div>
@@ -69,14 +69,14 @@ const UpsellModal = ({
           <div className="space-y-3 pt-2">
             <Button
               onClick={onAccept}
-              className="w-full gradient-primary text-primary-foreground font-bold py-6 rounded-xl text-base hover:opacity-90 transition-opacity"
+              className="w-full gradient-primary text-primary-foreground font-bold py-5 rounded-xl text-sm hover:opacity-90 transition-opacity"
             >
               Quero o plano maior! 🚀
             </Button>
             
             <button
               onClick={onDecline}
-              className="w-full text-muted-foreground text-sm hover:text-foreground transition-colors py-2"
+              className="w-full text-muted-foreground text-xs hover:text-foreground transition-colors py-2"
             >
               Agora não, continuar com {originalPlan.name}
             </button>

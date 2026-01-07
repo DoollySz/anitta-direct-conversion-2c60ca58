@@ -4,12 +4,13 @@ import ProfileHeader from "@/components/ProfileHeader";
 import ContentGrid from "@/components/ContentGrid";
 import SubscriptionSection from "@/components/SubscriptionSection";
 import UpsellModal from "@/components/UpsellModal";
+import FAQ from "@/components/FAQ";
 
 const plans = [
-  { id: "30days", name: "30 dias", price: 14.90, period: "Acesso por 1 mês" },
-  { id: "3months", name: "3 meses", price: 24.90, period: "Acesso por 3 meses" },
-  { id: "1year", name: "1 ano", price: 47.90, period: "Acesso por 1 ano" },
-  { id: "lifetime", name: "Vitalício", price: 87.90, period: "Acesso para sempre" },
+  { id: "30days", name: "30 Dias", price: 14.90, period: "Acesso por 1 mês", isHighlighted: true },
+  { id: "3months", name: "3 Meses", price: 24.90, period: "Acesso por 3 meses", badge: "Mais popular" },
+  { id: "1year", name: "1 Ano", price: 47.90, period: "Acesso por 1 ano", badge: "Melhor oferta" },
+  { id: "lifetime", name: "Vitalício", price: 87.90, period: "Acesso para sempre", badge: "Exclusivo" },
 ];
 
 const upsellOffers: Record<string, { name: string; price: number; originalPrice: number; targetPlanId: string }> = {
@@ -76,12 +77,16 @@ const Index = () => {
   const selectedPlan = selectedPlanId ? plans.find(p => p.id === selectedPlanId) : null;
   const upsellOffer = selectedPlanId ? upsellOffers[selectedPlanId] : null;
 
+  const lowestPrice = Math.min(...plans.map(p => p.price));
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="max-w-lg mx-auto pb-20">
+      <main className="max-w-lg mx-auto pb-8">
         <ProfileHeader onClickToSubscription={scrollToSubscription} />
+        
+        <ContentGrid onClickToSubscription={scrollToSubscription} />
         
         <div ref={subscriptionRef}>
           <SubscriptionSection
@@ -91,7 +96,7 @@ const Index = () => {
           />
         </div>
         
-        <ContentGrid onClickToSubscription={scrollToSubscription} />
+        <FAQ onClickToPlans={scrollToSubscription} lowestPrice={lowestPrice} />
       </main>
 
       {/* Upsell Modal */}

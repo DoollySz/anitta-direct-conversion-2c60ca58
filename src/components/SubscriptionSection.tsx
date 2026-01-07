@@ -1,4 +1,4 @@
-import { Shield, Phone } from "lucide-react";
+import { Shield, Lock, Zap } from "lucide-react";
 import SubscriptionCard from "./SubscriptionCard";
 
 interface Plan {
@@ -6,6 +6,8 @@ interface Plan {
   name: string;
   price: number;
   period: string;
+  badge?: string;
+  isHighlighted?: boolean;
 }
 
 interface SubscriptionSectionProps {
@@ -15,38 +17,59 @@ interface SubscriptionSectionProps {
 }
 
 const SubscriptionSection = ({ plans, onSelectPlan, promotionDate }: SubscriptionSectionProps) => {
+  const highlightedPlan = plans.find(p => p.isHighlighted);
+  const otherPlans = plans.filter(p => !p.isHighlighted);
+
   return (
     <section id="subscription" className="px-4 py-6 space-y-4">
-      {/* Promotion Banner */}
-      <div className="bg-primary/10 border border-primary/30 rounded-xl p-3 text-center">
-        <p className="text-primary text-sm font-medium">
-          ⏰ PROMOÇÃO VÁLIDA ATÉ {promotionDate}
+      {/* Promotion Header */}
+      <div className="text-center space-y-1">
+        <p className="text-primary text-sm font-medium flex items-center justify-center gap-2">
+          <span>🔥</span>
+          VEJA TUDO AGORA
+          <span>🔥</span>
+          <span className="bg-primary/20 text-primary text-xs px-2 py-0.5 rounded-full">Promocional</span>
         </p>
       </div>
 
-      {/* Subscription Cards */}
-      <div className="space-y-3">
-        {plans.map((plan) => (
+      {/* Highlighted Plan */}
+      {highlightedPlan && (
+        <SubscriptionCard
+          name={highlightedPlan.name}
+          price={highlightedPlan.price}
+          isHighlighted={true}
+          onClick={() => onSelectPlan(highlightedPlan.id)}
+        />
+      )}
+
+      {/* Security badges */}
+      <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
+        <span className="flex items-center gap-1">
+          <Lock className="w-3 h-3" />
+          Pagamento 100% seguro
+        </span>
+        <span className="flex items-center gap-1">
+          <Zap className="w-3 h-3" />
+          Acesso imediato
+        </span>
+      </div>
+
+      {/* Other Plans */}
+      <div className="space-y-2">
+        <p className="text-muted-foreground text-sm">Promoções</p>
+        {otherPlans.map((plan) => (
           <SubscriptionCard
             key={plan.id}
             name={plan.name}
             price={plan.price}
-            period={plan.period}
+            badge={plan.badge}
             onClick={() => onSelectPlan(plan.id)}
           />
         ))}
       </div>
 
-      {/* Video Call Benefit */}
-      <div className="flex items-center justify-center gap-2 py-3">
-        <Phone className="w-4 h-4 text-primary" />
-        <p className="text-muted-foreground text-sm">
-          Todas as assinaturas incluem <span className="text-foreground font-medium">1 chamada de vídeo</span>
-        </p>
-      </div>
-
       {/* Benefits */}
-      <div className="bg-card rounded-xl p-4 space-y-3">
+      <div className="bg-card rounded-xl p-4 space-y-2 border border-border">
         <div className="flex items-center gap-3 text-sm">
           <span className="text-primary">✓</span>
           <span className="text-foreground">Acesso a todos conteúdos exclusivos</span>
@@ -66,10 +89,17 @@ const SubscriptionSection = ({ plans, onSelectPlan, promotionDate }: Subscriptio
       </div>
 
       {/* Guarantee */}
-      <div className="flex items-center justify-center gap-2 py-4">
+      <div className="flex items-center justify-center gap-2 py-2">
         <Shield className="w-5 h-5 text-green-400" />
         <p className="text-green-400 text-sm font-medium">
           Garantia de 30 dias – risco zero
+        </p>
+      </div>
+
+      {/* Promotion Date */}
+      <div className="bg-primary/10 border border-primary/30 rounded-xl p-3 text-center">
+        <p className="text-primary text-sm font-medium">
+          ⏰ PROMOÇÃO VÁLIDA ATÉ {promotionDate}
         </p>
       </div>
 
