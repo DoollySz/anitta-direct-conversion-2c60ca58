@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Copy, Check, Loader2, CheckCircle } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,26 +25,14 @@ const Checkout = () => {
   const [copied, setCopied] = useState(false);
   const [pixData, setPixData] = useState<{
     qr_code: string;
-    qr_code_base64: string;
     transaction_id: number;
     expires_at: string;
   } | null>(null);
   
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
-    document: "",
     phone: "",
   });
-
-  // Format CPF
-  const formatCPF = (value: string) => {
-    const numbers = value.replace(/\D/g, "").slice(0, 11);
-    return numbers
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d)/, "$1.$2")
-      .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-  };
 
   // Format phone
   const formatPhone = (value: string) => {
@@ -61,9 +50,7 @@ const Checkout = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     
-    if (name === "document") {
-      setFormData(prev => ({ ...prev, [name]: formatCPF(value) }));
-    } else if (name === "phone") {
+    if (name === "phone") {
       setFormData(prev => ({ ...prev, [name]: formatPhone(value) }));
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -72,17 +59,6 @@ const Checkout = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Validate CPF (11 digits)
-    const cpfNumbers = formData.document.replace(/\D/g, "");
-    if (cpfNumbers.length !== 11) {
-      toast({
-        title: "CPF inválido",
-        description: "Digite um CPF válido com 11 dígitos.",
-        variant: "destructive",
-      });
-      return;
-    }
     
     // Validate phone (10 or 11 digits)
     const phoneNumbers = formData.phone.replace(/\D/g, "");
@@ -103,7 +79,10 @@ const Checkout = () => {
           planId,
           planName: plan.name,
           amount: plan.price,
-          customer: formData,
+          customer: {
+            email: formData.email,
+            phone: formData.phone,
+          },
         },
       });
       
@@ -112,7 +91,6 @@ const Checkout = () => {
       if (data.success) {
         setPixData({
           qr_code: data.qr_code,
-          qr_code_base64: data.qr_code_base64,
           transaction_id: data.transaction_id,
           expires_at: data.expires_at,
         });
@@ -200,19 +178,6 @@ const Checkout = () => {
         {step === "form" && (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Nome completo</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                placeholder="Seu nome completo"
-              />
-            </div>
-            
-            <div>
               <label className="block text-sm font-medium mb-2">E-mail</label>
               <input
                 type="email"
@@ -222,19 +187,6 @@ const Checkout = () => {
                 required
                 className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                 placeholder="seu@email.com"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">CPF</label>
-              <input
-                type="text"
-                name="document"
-                value={formData.document}
-                onChange={handleInputChange}
-                required
-                className="w-full px-4 py-3 bg-card border border-border rounded-xl focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                placeholder="000.000.000-00"
               />
             </div>
             
@@ -283,10 +235,11 @@ const Checkout = () => {
 
             {/* QR Code */}
             <div className="bg-white rounded-xl p-4 mx-auto w-fit">
-              <img
-                src={pixData.qr_code_base64}
-                alt="QR Code PIX"
-                className="w-48 h-48"
+              <QRCodeSVG
+                value={pixData.qr_code}
+                size={192}
+                level="M"
+                includeMargin={false}
               />
             </div>
 

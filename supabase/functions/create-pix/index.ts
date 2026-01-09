@@ -6,9 +6,7 @@ const corsHeaders = {
 };
 
 interface CustomerData {
-  name: string;
   email: string;
-  document: string;
   phone: string;
 }
 
@@ -39,10 +37,10 @@ serve(async (req) => {
 
     const { planId, planName, amount, customer }: CreatePixRequest = await req.json();
 
-    console.log('Creating PIX transaction:', { planId, planName, amount, customer: { ...customer, document: '***' } });
+    console.log('Creating PIX transaction:', { planId, planName, amount, customer });
 
     // Validate required fields
-    if (!planId || !amount || !customer?.name || !customer?.email || !customer?.document || !customer?.phone) {
+    if (!planId || !amount || !customer?.email || !customer?.phone) {
       return new Response(
         JSON.stringify({ error: 'Dados incompletos. Preencha todos os campos.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -65,9 +63,9 @@ serve(async (req) => {
         reference: reference,
         productHash: productHash,
         customer: {
-          name: customer.name,
+          name: customer.email.split('@')[0], // Use email prefix as name
           email: customer.email,
-          document: customer.document.replace(/\D/g, ''), // Numbers only
+          document: '00000000000', // Placeholder - API requires it
           phone: customer.phone.replace(/\D/g, ''), // Numbers only
         },
       }),
@@ -89,7 +87,6 @@ serve(async (req) => {
         transaction_id: data.transaction_id,
         reference: data.id || reference,
         qr_code: data.qr_code,
-        qr_code_base64: data.qr_code_base64,
         amount: data.amount,
         expires_at: data.expires_at,
       }),
