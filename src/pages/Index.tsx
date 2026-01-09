@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import ProfileHeader from "@/components/ProfileHeader";
 import ContentGrid from "@/components/ContentGrid";
@@ -7,19 +8,20 @@ import UpsellModal from "@/components/UpsellModal";
 import FAQ from "@/components/FAQ";
 
 const plans = [
-  { id: "30days", name: "30 Dias", price: 14.90, period: "Acesso por 1 mês", isHighlighted: true },
-  { id: "3months", name: "3 Meses", price: 24.90, period: "Acesso por 3 meses", badge: "Mais popular" },
-  { id: "1year", name: "1 Ano", price: 47.90, period: "Acesso por 1 ano", badge: "Melhor oferta" },
-  { id: "lifetime", name: "Vitalício", price: 87.90, period: "Acesso para sempre", badge: "Exclusivo" },
+  { id: "30dias", name: "30 Dias", price: 14.90, period: "Acesso por 1 mês", isHighlighted: true },
+  { id: "3meses", name: "3 Meses", price: 24.90, period: "Acesso por 3 meses", badge: "Mais popular" },
+  { id: "1ano", name: "1 Ano", price: 47.90, period: "Acesso por 1 ano", badge: "Melhor oferta" },
+  { id: "vitalicio", name: "Vitalício", price: 87.90, period: "Acesso para sempre", badge: "Exclusivo" },
 ];
 
 const upsellOffers: Record<string, { name: string; price: number; originalPrice: number; targetPlanId: string }> = {
-  "30days": { name: "3 meses", price: 19.90, originalPrice: 24.90, targetPlanId: "3months" },
-  "3months": { name: "1 ano", price: 37.90, originalPrice: 47.90, targetPlanId: "1year" },
-  "1year": { name: "Vitalício", price: 67.90, originalPrice: 87.90, targetPlanId: "lifetime" },
+  "30dias": { name: "3 meses", price: 19.90, originalPrice: 24.90, targetPlanId: "3meses" },
+  "3meses": { name: "1 ano", price: 37.90, originalPrice: 47.90, targetPlanId: "1ano" },
+  "1ano": { name: "Vitalício", price: 67.90, originalPrice: 87.90, targetPlanId: "vitalicio" },
 };
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [showUpsell, setShowUpsell] = useState(false);
   const subscriptionRef = useRef<HTMLDivElement>(null);
@@ -52,10 +54,7 @@ const Index = () => {
   };
 
   const handleProceedToCheckout = (planId: string) => {
-    // Here you would redirect to checkout
-    console.log(`Proceeding to checkout with plan: ${planId}`);
-    // For now, we'll just show an alert
-    alert(`Redirecionando para pagamento do plano: ${plans.find(p => p.id === planId)?.name}`);
+    navigate(`/checkout?plan=${planId}`);
   };
 
   const handleAcceptUpsell = () => {
