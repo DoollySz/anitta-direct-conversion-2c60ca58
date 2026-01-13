@@ -33,11 +33,11 @@ const ProfileHeader = ({
         </div>
 
         <p className="mt-3 text-foreground text-sm leading-relaxed">😈 SEMPRE PELADINHA E FODENDO MUITO!
-💋 Acesso VIP aos meus bastidores
-📸 Fotos e vídeos especiais só para assinantes<br />
-          💋 Acesso VIP aos meus bastidores
+
+        <br />
+          🔥 Conteúdo exclusivo +18, minha vida de putinha           
           <br />
-          📸 Fotos e vídeos especiais só para assinantes
+          ​📽️ Vocês acham que eu não gosto de pirocada? Vem conferir...                     
         </p>
 
         <div className="flex items-center gap-6 mt-4 text-sm text-muted-foreground">
