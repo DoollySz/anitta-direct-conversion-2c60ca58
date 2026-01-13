@@ -53,13 +53,19 @@ const Index = () => {
     }
   };
 
-  const handleProceedToCheckout = (planId: string) => {
-    navigate(`/checkout?plan=${planId}`);
+  const handleProceedToCheckout = (planId: string, promoPrice?: number) => {
+    const params = new URLSearchParams({ plan: planId });
+    if (promoPrice) {
+      params.set("promo", promoPrice.toString());
+    }
+    navigate(`/checkout?${params.toString()}`);
   };
 
   const handleAcceptUpsell = () => {
     if (selectedPlanId && upsellOffers[selectedPlanId]) {
-      handleProceedToCheckout(upsellOffers[selectedPlanId].targetPlanId);
+      const offer = upsellOffers[selectedPlanId];
+      // Pass promo price in cents
+      handleProceedToCheckout(offer.targetPlanId, offer.price * 100);
     }
     setShowUpsell(false);
     setSelectedPlanId(null);

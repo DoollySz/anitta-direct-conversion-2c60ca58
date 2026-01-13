@@ -18,7 +18,14 @@ const Checkout = () => {
   const { toast } = useToast();
   
   const planId = searchParams.get("plan") || "30dias";
-  const plan = plans[planId] || plans["30dias"];
+  const promoPrice = searchParams.get("promo");
+  const basePlan = plans[planId] || plans["30dias"];
+  
+  // Use promo price if available, otherwise use base plan price
+  const plan = {
+    name: basePlan.name,
+    price: promoPrice ? parseInt(promoPrice, 10) : basePlan.price,
+  };
   
   const [step, setStep] = useState<"form" | "pix" | "success">("form");
   const [loading, setLoading] = useState(false);
