@@ -1,10 +1,3 @@
-useEffect(() => {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}, []);
-
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Copy, Check, Loader2, CheckCircle, Shield, Lock, CheckSquare, ShieldCheck } from "lucide-react";
