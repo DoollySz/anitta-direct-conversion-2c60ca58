@@ -32,10 +32,7 @@ const ProfileHeader = ({
           <p className="text-muted-foreground text-sm">@anitta</p>
         </div>
 
-        <p className="mt-3 text-foreground text-sm leading-relaxed">😈 SEMPRE PELADINHA E FODENDO MUITO!
-🔥 Conteúdo exclusivo que você não encontra em nenhum outro lugar
-💋 Acesso VIP aos meus bastidores
-📸 Fotos e vídeos especiais só para assinantes<br />
+        <p className="mt-3 text-foreground text-sm leading-relaxed">😈 SEMPRE PELADINHA E FODENDO MUITO! 🔥 Conteúdo exclusivo que você não encontra em nenhum outro lugar <br />
           💋 Acesso VIP aos meus bastidores
           <br />
           📸 Fotos e vídeos especiais só para assinantes
