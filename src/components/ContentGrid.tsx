@@ -1,6 +1,4 @@
 import VideoPreview from "./VideoPreview";
-import bannerImage from "@/assets/banner.png";
-import profileImage from "@/assets/profile-anitta.png";
 import { Lock } from "lucide-react";
 
 interface ContentGridProps {
@@ -14,11 +12,14 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
     { src: "/videos/video3.mp4", likes: "156.8K", comments: "12.4K" },
   ];
 
-  const images = [bannerImage, profileImage];
+  const moreVideos = [
+    { src: "/videos/video4.mp4", likes: "98.4K", comments: "5.3K" },
+    { src: "/videos/video5.mp4", likes: "112.7K", comments: "9.8K" },
+  ];
 
   return (
     <div className="px-3 py-4">
-      {/* Videos Grid */}
+      {/* Videos Grid - Row 1 */}
       <div className="grid grid-cols-3 gap-1.5">
         {videos.map((video, index) => (
           <VideoPreview
@@ -31,31 +32,20 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
         ))}
       </div>
 
-      {/* Images Grid */}
+      {/* Videos Grid - Row 2 */}
       <div className="grid grid-cols-3 gap-1.5 mt-1.5">
-        {images.map((image, index) => (
-          <div
-            key={index}
+        {moreVideos.map((video, index) => (
+          <VideoPreview
+            key={`more-${index}`}
+            src={video.src}
+            likes={video.likes}
+            comments={video.comments}
             onClick={onClickToSubscription}
-            className="relative aspect-square bg-card rounded-xl overflow-hidden clickable-area cursor-pointer"
-          >
-            <img
-              src={image}
-              alt={`Content ${index + 1}`}
-              className="w-full h-full object-cover blur-sm"
-            />
-            
-            {/* Lock Overlay */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Lock className="w-4 h-4 text-white/80" />
-              </div>
-            </div>
-          </div>
+          />
         ))}
         <div
           onClick={onClickToSubscription}
-          className="relative aspect-square bg-card rounded-xl overflow-hidden clickable-area cursor-pointer flex flex-col items-center justify-center"
+          className="relative aspect-[9/16] bg-card rounded-xl overflow-hidden clickable-area cursor-pointer flex flex-col items-center justify-center"
         >
           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-1">
             <Lock className="w-4 h-4 text-muted-foreground" />
