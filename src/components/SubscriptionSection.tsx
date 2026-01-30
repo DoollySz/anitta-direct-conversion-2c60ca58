@@ -99,7 +99,7 @@ const SubscriptionSection = ({ plans, onSelectPlan, promotionDate }: Subscriptio
       {/* Promotion Date */}
       <div className="bg-primary/10 border border-primary/30 rounded-xl p-3 text-center">
         <p className="text-primary text-sm font-medium">
-          ⏰ PROMOÇÃO VÁLIDA ATÉ {promotionDate}
+          ⏰ PROMOÇÃO VÁLIDA ATÉ HOJE
         </p>
       </div>
 
