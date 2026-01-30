@@ -17,7 +17,7 @@ const ProfileHeader = ({
       {/* Profile Info */}
       <div className="px-4 -mt-12 relative z-10">
         <div className="flex items-end gap-4">
-          <div onClick={onClickToSubscription} className="clickable-area cursor-pointer group">
+          <div onClick={onClickToSubscription} className="clickable-area cursor-pointer group relative">
             {/* Live story ring gradient */}
             <div className="w-[104px] h-[104px] rounded-full bg-gradient-to-tr from-pink-500 via-red-500 to-orange-500 p-[3px] animate-pulse">
               <div className="w-full h-full rounded-full bg-background p-[3px]">
@@ -25,6 +25,10 @@ const ProfileHeader = ({
                   <img src={profileImage} alt="Anitta" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 </div>
               </div>
+            </div>
+            {/* Live badge */}
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md border-2 border-background shadow-lg">
+              LIVE
             </div>
           </div>
         </div>
