@@ -15,12 +15,12 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
   const videosRow2 = [
     { src: "/videos/video4.mp4", likes: "98.4K", comments: "5.3K" },
     { src: "/videos/video5.mp4", likes: "112.7K", comments: "9.8K" },
+    { src: "/videos/video10.mp4", likes: "201.4K", comments: "15.3K" },
   ];
 
   const videosRow3 = [
     { src: "/videos/video8.mp4", likes: "143.2K", comments: "11.5K" },
     { src: "/videos/video9.mp4", likes: "87.9K", comments: "6.7K" },
-    { src: "/videos/video10.mp4", likes: "201.4K", comments: "15.3K" },
   ];
 
   return (
@@ -49,6 +49,19 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
             onClick={onClickToSubscription}
           />
         ))}
+      </div>
+
+      {/* Videos Grid - Row 3 */}
+      <div className="grid grid-cols-3 gap-1.5 mt-1.5">
+        {videosRow3.map((video, index) => (
+          <VideoPreview
+            key={`row3-${index}`}
+            src={video.src}
+            likes={video.likes}
+            comments={video.comments}
+            onClick={onClickToSubscription}
+          />
+        ))}
         {/* Image with "Ver mais mídias" */}
         <div
           onClick={onClickToSubscription}
@@ -68,19 +81,6 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
             <span className="text-white/70 text-[10px] mt-1">+1.2K fotos e vídeos</span>
           </div>
         </div>
-      </div>
-
-      {/* Videos Grid - Row 3 */}
-      <div className="grid grid-cols-3 gap-1.5 mt-1.5">
-        {videosRow3.map((video, index) => (
-          <VideoPreview
-            key={`row3-${index}`}
-            src={video.src}
-            likes={video.likes}
-            comments={video.comments}
-            onClick={onClickToSubscription}
-          />
-        ))}
       </div>
     </div>
   );
