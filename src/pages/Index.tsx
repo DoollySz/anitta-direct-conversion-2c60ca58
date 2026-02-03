@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import ProfileHeader from "@/components/ProfileHeader";
 import ContentGrid from "@/components/ContentGrid";
@@ -21,7 +20,6 @@ const upsellOffers: Record<string, { name: string; price: number; originalPrice:
 };
 
 const Index = () => {
-  const navigate = useNavigate();
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [showUpsell, setShowUpsell] = useState(false);
   const subscriptionRef = useRef<HTMLDivElement>(null);
@@ -54,11 +52,13 @@ const Index = () => {
   };
 
   const handleProceedToCheckout = (planId: string, promoPrice?: number) => {
-    const params = new URLSearchParams({ plan: planId });
+    // Preserve existing URL parameters (UTMs, tracking, etc.)
+    const existingParams = new URLSearchParams(window.location.search);
+    existingParams.set("plan", planId);
     if (promoPrice) {
-      params.set("promo", promoPrice.toString());
+      existingParams.set("promo", promoPrice.toString());
     }
-    navigate(`/checkout?${params.toString()}`);
+    window.location.href = `/checkout?${existingParams.toString()}`;
   };
 
   const handleAcceptUpsell = () => {
