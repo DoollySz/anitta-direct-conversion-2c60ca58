@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
 import { Copy, Check, Loader2, CheckCircle, Shield, Lock, CheckSquare, ShieldCheck } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,12 +15,12 @@ const plans: Record<string, { name: string; price: number }> = {
 };
 
 const Checkout = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const { toast } = useToast();
   
-  const planId = searchParams.get("plan") || "30dias";
-  const promoPrice = searchParams.get("promo");
+  // Get URL parameters directly from window.location
+  const urlParams = new URLSearchParams(window.location.search);
+  const planId = urlParams.get("plan") || "30dias";
+  const promoPrice = urlParams.get("promo");
   const basePlan = plans[planId] || plans["30dias"];
   
   const plan = {
@@ -458,7 +457,10 @@ const Checkout = () => {
             </div>
 
             <button
-              onClick={() => navigate("/privacy")}
+              onClick={() => {
+                // Preserve all URL parameters when navigating back
+                window.location.href = "/privacy" + window.location.search;
+              }}
               className="w-full bg-card border border-border font-medium py-3 rounded-xl hover:border-primary transition-colors text-foreground"
             >
               Voltar para o início

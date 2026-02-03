@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
 import logoImage from "@/assets/logo.webp";
+
 const AgeVerification = () => {
-  const navigate = useNavigate();
   const handleConfirmAge = () => {
     // Store verification in localStorage
     localStorage.setItem("age_verified", "true");
-    navigate("/privacy");
+    // Preserve all URL parameters when navigating
+    window.location.href = "/privacy" + window.location.search;
   };
   const handleDenyAge = () => {
     window.location.href = "https://www.google.com";
