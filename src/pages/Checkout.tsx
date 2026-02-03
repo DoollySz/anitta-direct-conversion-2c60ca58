@@ -46,6 +46,11 @@ const Checkout = () => {
   const [timeLeft, setTimeLeft] = useState(480);
   const [timerExpired, setTimerExpired] = useState(false);
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
