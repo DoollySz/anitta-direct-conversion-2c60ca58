@@ -1,4 +1,5 @@
 import { Lock } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface VideoPreviewProps {
   src: string;
@@ -8,19 +9,62 @@ interface VideoPreviewProps {
 }
 
 const VideoPreview = ({ src, onClick, likes = "89.6K", comments = "7.1K" }: VideoPreviewProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { rootMargin: "100px", threshold: 0.1 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (isVisible && videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay might be blocked, that's ok
+      });
+    }
+  }, [isVisible, isLoaded]);
+
   return (
     <div
+      ref={containerRef}
       onClick={onClick}
       className="relative aspect-[9/16] bg-card rounded-xl overflow-hidden clickable-area cursor-pointer"
     >
-      <video
-        src={src}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="w-full h-full object-cover blur-sm"
-      />
+      {/* Skeleton loader */}
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-card animate-pulse" />
+      )}
+      
+      {isVisible && (
+        <video
+          ref={videoRef}
+          src={src}
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          onLoadedData={() => setIsLoaded(true)}
+          className={`w-full h-full object-cover blur-sm transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+      )}
       
       {/* Lock Overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
