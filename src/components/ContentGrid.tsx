@@ -1,4 +1,4 @@
-import VideoPreview from "./VideoPreview";
+import OptimizedVideoPreview from "./OptimizedVideoPreview";
 import { Lock, Images } from "lucide-react";
 
 interface ContentGridProps {
@@ -28,7 +28,7 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
       {/* Videos Grid - Row 1 */}
       <div className="grid grid-cols-3 gap-1.5">
         {videosRow1.map((video, index) => (
-          <VideoPreview
+          <OptimizedVideoPreview
             key={index}
             src={video.src}
             likes={video.likes}
@@ -41,7 +41,7 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
       {/* Videos Grid - Row 2 */}
       <div className="grid grid-cols-3 gap-1.5 mt-1.5">
         {videosRow2.map((video, index) => (
-          <VideoPreview
+          <OptimizedVideoPreview
             key={`row2-${index}`}
             src={video.src}
             likes={video.likes}
@@ -54,7 +54,7 @@ const ContentGrid = ({ onClickToSubscription }: ContentGridProps) => {
       {/* Videos Grid - Row 3 */}
       <div className="grid grid-cols-3 gap-1.5 mt-1.5">
         {videosRow3.map((video, index) => (
-          <VideoPreview
+          <OptimizedVideoPreview
             key={`row3-${index}`}
             src={video.src}
             likes={video.likes}
