@@ -12,19 +12,15 @@ const VideoPreview = ({ src, onClick, likes = "89.6K", comments = "7.1K" }: Vide
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.disconnect();
-          }
+          setIsVisible(entry.isIntersecting);
         });
       },
-      { rootMargin: "100px", threshold: 0.1 }
+      { rootMargin: "50px", threshold: 0.1 }
     );
 
     if (containerRef.current) {
@@ -35,12 +31,18 @@ const VideoPreview = ({ src, onClick, likes = "89.6K", comments = "7.1K" }: Vide
   }, []);
 
   useEffect(() => {
-    if (isVisible && videoRef.current) {
-      videoRef.current.play().catch(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isVisible) {
+      video.play().catch(() => {
         // Autoplay might be blocked, that's ok
       });
+    } else {
+      video.pause();
+      video.currentTime = 0;
     }
-  }, [isVisible, isLoaded]);
+  }, [isVisible]);
 
   return (
     <div
@@ -48,23 +50,15 @@ const VideoPreview = ({ src, onClick, likes = "89.6K", comments = "7.1K" }: Vide
       onClick={onClick}
       className="relative aspect-[9/16] bg-card rounded-xl overflow-hidden clickable-area cursor-pointer"
     >
-      {/* Skeleton loader */}
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-card animate-pulse" />
-      )}
-      
-      {isVisible && (
-        <video
-          ref={videoRef}
-          src={src}
-          loop
-          muted
-          playsInline
-          preload="metadata"
-          onLoadedData={() => setIsLoaded(true)}
-          className={`w-full h-full object-cover blur-sm transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
-        />
-      )}
+      <video
+        ref={videoRef}
+        src={src}
+        loop
+        muted
+        playsInline
+        preload="none"
+        className="w-full h-full object-cover blur-sm"
+      />
       
       {/* Lock Overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
