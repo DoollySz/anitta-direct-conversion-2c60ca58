@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import AgeVerification from "./pages/AgeVerification";
 import Checkout from "./pages/Checkout";
+import OfertaEspecial from "./pages/OfertaEspecial";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <Checkout />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/oferta-especial" 
+            element={
+              <ProtectedRoute>
+                <OfertaEspecial />
               </ProtectedRoute>
             } 
           />

@@ -55,9 +55,32 @@ const Checkout = () => {
   const [timeLeft, setTimeLeft] = useState(480);
   const [timerExpired, setTimerExpired] = useState(false);
 
-  // Scroll to top on mount
+  // Scroll to top on mount and setup back redirect
   useEffect(() => {
     window.scrollTo(0, 0);
+    
+    // Back redirect setup
+    const setupBackRedirect = () => {
+      const currentParams = window.location.search;
+      const backRedirectUrl = `/oferta-especial${currentParams}`;
+      
+      history.pushState({}, '', location.href);
+      history.pushState({}, '', location.href);
+      history.pushState({}, '', location.href);
+      
+      const handlePopState = () => {
+        window.location.href = backRedirectUrl;
+      };
+      
+      window.addEventListener('popstate', handlePopState);
+      
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    };
+    
+    const cleanup = setupBackRedirect();
+    return cleanup;
   }, []);
 
   // Generate PIX automatically on mount
