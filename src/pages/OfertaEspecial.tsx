@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Clock, Zap, Gift, CheckCircle } from "lucide-react";
 import profileImage from "@/assets/profile-anitta.png";
 import verifiedBadge from "@/assets/verified-badge.png";
+import ParadisePlayer from "@/components/ParadisePlayer";
 
 // Plans with 50% discount - prices in reais for display, will be converted to cents for API
 const plans = [
@@ -73,20 +74,9 @@ const OfertaEspecial = () => {
       {/* Spacer for fixed headers */}
       <div className="h-[84px]" />
 
-      {/* VSL Video - Full Width */}
-      <div className="w-full bg-black">
-        <div className="max-w-2xl mx-auto">
-          <div style={{ padding: "179.81% 0 0 0", position: "relative" }}>
-            <iframe
-              src="https://player.vimeo.com/video/1162432916?badge=0&autopause=0&player_id=0&app_id=58479&loop=1&autoplay=1&muted=0"
-              frameBorder="0"
-              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-              title="BACKREDIRECT"
-            />
-          </div>
-        </div>
+      {/* Paradise Player VSL */}
+      <div className="w-full bg-black py-4">
+        <ParadisePlayer src="/videos/vsl.mp4" />
       </div>
 
       <main className="max-w-lg mx-auto px-4 py-6">
