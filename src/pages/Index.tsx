@@ -5,6 +5,7 @@ import ContentGrid from "@/components/ContentGrid";
 import SubscriptionSection from "@/components/SubscriptionSection";
 import UpsellModal from "@/components/UpsellModal";
 import FAQ from "@/components/FAQ";
+import { useBackRedirect } from "@/hooks/useBackRedirect";
 
 const plans = [
   { id: "30dias", name: "30 Dias", price: 14.90, period: "Acesso por 1 mês", isHighlighted: true },
@@ -23,6 +24,9 @@ const Index = () => {
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [showUpsell, setShowUpsell] = useState(false);
   const subscriptionRef = useRef<HTMLDivElement>(null);
+  
+  // Back redirect to special offer page
+  useBackRedirect("/oferta-especial");
 
   // Generate dynamic date (current date + 7 days)
   const getPromotionDate = () => {

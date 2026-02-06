@@ -3,6 +3,7 @@ import { Copy, Check, Loader2, CheckCircle, Shield, Lock, CheckSquare, ShieldChe
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useBackRedirect } from "@/hooks/useBackRedirect";
 import checkoutBanner1 from "@/assets/checkout-banner1.png";
 import checkoutBanner2 from "@/assets/checkout-banner2.png";
 import pixLogo from "@/assets/pix-logo.png";
@@ -55,32 +56,12 @@ const Checkout = () => {
   const [timeLeft, setTimeLeft] = useState(480);
   const [timerExpired, setTimerExpired] = useState(false);
 
-  // Scroll to top on mount and setup back redirect
+  // Back redirect to special offer
+  useBackRedirect("/oferta-especial");
+
+  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    // Back redirect setup
-    const setupBackRedirect = () => {
-      const currentParams = window.location.search;
-      const backRedirectUrl = `/oferta-especial${currentParams}`;
-      
-      history.pushState({}, '', location.href);
-      history.pushState({}, '', location.href);
-      history.pushState({}, '', location.href);
-      
-      const handlePopState = () => {
-        window.location.href = backRedirectUrl;
-      };
-      
-      window.addEventListener('popstate', handlePopState);
-      
-      return () => {
-        window.removeEventListener('popstate', handlePopState);
-      };
-    };
-    
-    const cleanup = setupBackRedirect();
-    return cleanup;
   }, []);
 
   // Generate PIX automatically on mount
