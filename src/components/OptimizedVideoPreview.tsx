@@ -8,9 +8,6 @@ interface OptimizedVideoPreviewProps {
   comments?: string;
 }
 
-// Keep only one video playing at a time to avoid CPU/GPU spikes on mobile.
-let activeVideoEl: HTMLVideoElement | null = null;
-
 const OptimizedVideoPreview = ({
   src,
   onClick,
@@ -22,10 +19,10 @@ const OptimizedVideoPreview = ({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [shouldLoad, setShouldLoad] = useState(false);
-  const [isActive, setIsActive] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const ioOptions = useMemo<IntersectionObserverInit>(
-    () => ({ rootMargin: "120px", threshold: [0, 0.35, 0.6, 0.85] }),
+    () => ({ rootMargin: "200px", threshold: [0, 0.1] }),
     []
   );
 
@@ -37,11 +34,11 @@ const OptimizedVideoPreview = ({
       for (const entry of entries) {
         if (entry.target !== el) continue;
 
-        // Start loading slightly before it appears.
-        if (entry.intersectionRatio >= 0.35) setShouldLoad(true);
+        // Start loading when approaching viewport
+        if (entry.intersectionRatio >= 0.1) setShouldLoad(true);
 
-        // Only consider "active" when largely visible.
-        setIsActive(entry.isIntersecting && entry.intersectionRatio >= 0.6);
+        // Play/pause based on visibility
+        setIsVisible(entry.isIntersecting);
       }
     }, ioOptions);
 
@@ -51,49 +48,15 @@ const OptimizedVideoPreview = ({
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !shouldLoad) return;
 
-    const pauseAndRewind = () => {
-      try {
-        video.pause();
-        // Rewinding every time can cause extra work; keep it simple.
-        video.currentTime = 0;
-      } catch {
-        // no-op
-      }
-    };
-
-    if (!shouldLoad) {
-      pauseAndRewind();
-      if (activeVideoEl === video) activeVideoEl = null;
-      return;
-    }
-
-    if (isActive) {
-      if (activeVideoEl && activeVideoEl !== video) {
-        try {
-          activeVideoEl.pause();
-        } catch {
-          // no-op
-        }
-      }
-
-      activeVideoEl = video;
-      video
-        .play()
-        .catch(() => {
-          // Autoplay can be blocked; keep it muted anyway.
-        });
+    if (isVisible) {
+      // Play with low priority - catches autoplay restrictions gracefully
+      video.play().catch(() => {});
     } else {
-      if (activeVideoEl === video) activeVideoEl = null;
-      pauseAndRewind();
+      video.pause();
     }
-
-    return () => {
-      if (activeVideoEl === video) activeVideoEl = null;
-      pauseAndRewind();
-    };
-  }, [isActive, shouldLoad, instanceId]);
+  }, [isVisible, shouldLoad]);
 
   return (
     <div
@@ -101,12 +64,6 @@ const OptimizedVideoPreview = ({
       onClick={onClick}
       className="relative aspect-[9/16] bg-card rounded-xl overflow-hidden clickable-area cursor-pointer"
     >
-      {/*
-        Important performance choices:
-        - render the <video> only when near viewport (shouldLoad)
-        - avoid CSS blur filter on video (expensive on mobile)
-        - allow only 1 video playing globally
-      */}
       {shouldLoad ? (
         <video
           ref={videoRef}
@@ -116,15 +73,14 @@ const OptimizedVideoPreview = ({
           playsInline
           preload="metadata"
           disablePictureInPicture
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover blur-[2px]"
         />
       ) : (
-        // Lightweight placeholder that keeps layout stable.
         <div className="w-full h-full bg-muted" />
       )}
 
-      {/* Soft overlay to communicate gated content without heavy filters */}
-      <div className="absolute inset-0 bg-background/10" />
+      {/* Soft overlay */}
+      <div className="absolute inset-0 bg-background/20" />
 
       {/* Lock Overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-center">
