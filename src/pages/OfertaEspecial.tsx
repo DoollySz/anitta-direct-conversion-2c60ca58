@@ -46,101 +46,109 @@ const OfertaEspecial = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Urgency Header */}
-      <div className="bg-gradient-to-r from-red-600 to-red-500 text-white">
-        <div className="max-w-lg mx-auto px-4 py-3 text-center">
+      {/* Floating Urgency Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-destructive/95 backdrop-blur-sm text-white shadow-lg">
+        <div className="max-w-lg mx-auto px-4 py-2.5 text-center">
           <div className="flex items-center justify-center gap-2">
-            <Clock className="w-5 h-5 animate-pulse" />
-            <p className="font-bold text-sm tracking-wide">
-              OFERTA EXPIRA EM: <span className="font-mono text-lg">{formatTime(timeLeft)}</span>
+            <Clock className="w-4 h-4 animate-pulse" />
+            <p className="font-bold text-xs sm:text-sm tracking-wide">
+              ⏰ OFERTA EXPIRA EM: <span className="font-mono text-base sm:text-lg bg-white/20 px-2 py-0.5 rounded">{formatTime(timeLeft)}</span>
             </p>
           </div>
         </div>
       </div>
 
       {/* Special Offer Banner */}
-      <div className="bg-primary text-primary-foreground">
-        <div className="max-w-lg mx-auto px-4 py-3 text-center">
+      <div className="fixed top-[42px] left-0 right-0 z-40 bg-gradient-to-r from-primary via-primary to-accent text-primary-foreground shadow-md">
+        <div className="max-w-lg mx-auto px-4 py-2 text-center">
           <div className="flex items-center justify-center gap-2">
-            <Gift className="w-5 h-5" />
-            <p className="font-bold text-sm">
-              🔥 ÚLTIMA CHANCE: 50% DE DESCONTO EM TODOS OS PLANOS! 🔥
+            <Gift className="w-4 h-4" />
+            <p className="font-bold text-xs sm:text-sm">
+              🔥 50% DE DESCONTO EM TODOS OS PLANOS! 🔥
             </p>
           </div>
         </div>
       </div>
 
-      {/* VSL Video */}
-      <div className="max-w-lg mx-auto px-4 pt-4">
-        <div style={{ padding: "179.81% 0 0 0", position: "relative" }}>
-          <iframe
-            src="https://player.vimeo.com/video/1162429038?badge=0&autopause=0&player_id=0&app_id=58479&loop=1"
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-            title="BACKREDIRECT"
-          />
+      {/* Spacer for fixed headers */}
+      <div className="h-[84px]" />
+
+      {/* VSL Video - Full Width */}
+      <div className="w-full bg-black">
+        <div className="max-w-2xl mx-auto">
+          <div style={{ padding: "179.81% 0 0 0", position: "relative" }}>
+            <iframe
+              src="https://player.vimeo.com/video/1162432916?badge=0&autopause=0&player_id=0&app_id=58479&loop=1&autoplay=1&muted=0"
+              frameBorder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+              title="BACKREDIRECT"
+            />
+          </div>
         </div>
       </div>
 
       <main className="max-w-lg mx-auto px-4 py-6">
-        {/* Profile Section */}
-        <div className="text-center mb-6">
-          <div className="relative w-24 h-24 mx-auto mb-4">
+        {/* Profile Section - Compact */}
+        <div className="text-center mb-5">
+          <div className="relative w-20 h-20 mx-auto mb-3">
             <img
               src={profileImage}
               alt="Anitta"
-              className="w-full h-full rounded-full object-cover border-4 border-primary"
+              className="w-full h-full rounded-full object-cover border-3 border-primary shadow-glow"
             />
             <img
               src={verifiedBadge}
               alt="Verificado"
-              className="absolute -bottom-1 -right-1 w-8 h-8"
+              className="absolute -bottom-1 -right-1 w-7 h-7"
             />
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">
+          <h1 className="text-xl font-bold text-foreground mb-1">
             Espera! Não vá embora! 🥺
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Preparamos uma oferta exclusiva só pra você
           </p>
         </div>
 
-        {/* Discount Highlight */}
-        <div className="bg-gradient-to-r from-primary/20 to-primary/10 border-2 border-primary rounded-xl p-4 mb-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Zap className="w-6 h-6 text-primary" />
-            <span className="text-3xl font-black text-primary">50% OFF</span>
-            <Zap className="w-6 h-6 text-primary" />
+        {/* Big Discount Highlight */}
+        <div className="bg-gradient-to-br from-primary/30 via-primary/20 to-accent/20 border-2 border-primary rounded-2xl p-5 mb-5 text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse" />
+          <div className="relative">
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <Zap className="w-8 h-8 text-primary animate-pulse" />
+              <span className="text-4xl font-black text-primary drop-shadow-lg">50% OFF</span>
+              <Zap className="w-8 h-8 text-primary animate-pulse" />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Desconto aplicado automaticamente
+            </p>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Desconto aplicado automaticamente em todos os planos
-          </p>
         </div>
 
-        {/* Plans Grid */}
-        <div className="space-y-3 mb-6">
+        {/* Plans Grid - Compact Cards */}
+        <div className="space-y-2.5 mb-5">
           {plans.map((plan) => (
             <button
               key={plan.id}
               onClick={() => handleSelectPlan(plan.id, plan.priceInCents)}
-              className="w-full bg-card border-2 border-border hover:border-primary rounded-xl p-4 transition-all duration-200 text-left relative overflow-hidden group"
+              className="w-full bg-gradient-to-r from-card to-card/80 border-2 border-border hover:border-primary hover:shadow-glow rounded-xl p-3.5 transition-all duration-300 text-left relative overflow-hidden group"
             >
               {plan.badge && (
-                <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-primary to-accent text-primary-foreground text-[10px] font-bold px-2.5 py-1 rounded-bl-lg uppercase tracking-wide">
                   {plan.badge}
                 </div>
               )}
               
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-bold text-lg text-foreground">{plan.name}</p>
-                  <p className="text-sm text-muted-foreground">{plan.period}</p>
+                <div className="flex-1">
+                  <p className="font-bold text-base text-foreground group-hover:text-primary transition-colors">{plan.name}</p>
+                  <p className="text-xs text-muted-foreground">{plan.period}</p>
                 </div>
                 
                 <div className="text-right">
-                  <p className="text-sm text-muted-foreground line-through">
+                  <p className="text-xs text-muted-foreground line-through">
                     R$ {plan.originalPrice.toFixed(2).replace(".", ",")}
                   </p>
                   <p className="text-xl font-black text-primary">
@@ -149,43 +157,45 @@ const OfertaEspecial = () => {
                 </div>
               </div>
 
-              <div className="mt-3 flex items-center gap-2 text-sm text-primary">
-                <CheckCircle className="w-4 h-4" />
-                <span>Economia de R$ {plan.originalPrice.toFixed(2).replace(".", ",")}</span>
+              <div className="mt-2 flex items-center gap-1.5 text-xs text-primary/80">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>Economia de R$ {(plan.originalPrice - plan.price).toFixed(2).replace(".", ",")}</span>
               </div>
             </button>
           ))}
         </div>
 
-        {/* Benefits */}
-        <div className="bg-card border border-border rounded-xl p-4 mb-6">
-          <p className="font-bold text-foreground mb-3 text-center">
+        {/* Benefits - Compact */}
+        <div className="bg-card/50 border border-border rounded-xl p-4 mb-5">
+          <p className="font-bold text-sm text-foreground mb-2.5 text-center">
             ✨ O que você vai receber:
           </p>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-              <span>Acesso imediato ao conteúdo exclusivo</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-              <span>Fotos e vídeos atualizados diariamente</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-              <span>Suporte prioritário 24 horas</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-              <span>Garantia de satisfação de 30 dias</span>
-            </li>
-          </ul>
+          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span>Acesso imediato</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span>Atualizações diárias</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span>Suporte 24h</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <CheckCircle className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span>Garantia 30 dias</span>
+            </div>
+          </div>
         </div>
 
-        {/* Urgency Text */}
-        <p className="text-center text-sm text-muted-foreground">
-          ⚠️ Esta oferta é válida apenas agora e não será repetida.
-        </p>
+        {/* Urgency Footer */}
+        <div className="text-center">
+          <p className="text-xs text-muted-foreground bg-destructive/10 border border-destructive/30 rounded-lg py-2 px-3">
+            ⚠️ Esta oferta é válida apenas agora e não será repetida.
+          </p>
+        </div>
       </main>
     </div>
   );
