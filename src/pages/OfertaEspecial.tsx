@@ -3,11 +3,12 @@ import { Clock, Zap, Gift, CheckCircle } from "lucide-react";
 import profileImage from "@/assets/profile-anitta.png";
 import verifiedBadge from "@/assets/verified-badge.png";
 
+// Plans with 50% discount - prices in reais for display, will be converted to cents for API
 const plans = [
-  { id: "30dias", name: "30 Dias", originalPrice: 14.90, price: 7.45, period: "Acesso por 1 mês" },
-  { id: "3meses", name: "3 Meses", originalPrice: 24.90, price: 12.45, period: "Acesso por 3 meses", badge: "Mais popular" },
-  { id: "1ano", name: "1 Ano", originalPrice: 47.90, price: 23.95, period: "Acesso por 1 ano", badge: "Melhor oferta" },
-  { id: "vitalicio", name: "Vitalício", originalPrice: 87.90, price: 43.95, period: "Acesso para sempre", badge: "Exclusivo" },
+  { id: "30dias", name: "30 Dias", originalPrice: 14.90, price: 7.45, priceInCents: 745, period: "Acesso por 1 mês" },
+  { id: "3meses", name: "3 Meses", originalPrice: 24.90, price: 12.45, priceInCents: 1245, period: "Acesso por 3 meses", badge: "Mais popular" },
+  { id: "1ano", name: "1 Ano", originalPrice: 47.90, price: 23.95, priceInCents: 2395, period: "Acesso por 1 ano", badge: "Melhor oferta" },
+  { id: "vitalicio", name: "Vitalício", originalPrice: 87.90, price: 43.95, priceInCents: 4395, period: "Acesso para sempre", badge: "Exclusivo" },
 ];
 
 const OfertaEspecial = () => {
@@ -36,10 +37,10 @@ const OfertaEspecial = () => {
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handleSelectPlan = (planId: string, price: number) => {
+  const handleSelectPlan = (planId: string, priceInCents: number) => {
     const existingParams = new URLSearchParams(window.location.search);
     existingParams.set("plan", planId);
-    existingParams.set("promo", (price * 100).toString());
+    existingParams.set("promo", priceInCents.toString());
     window.location.href = `/checkout?${existingParams.toString()}`;
   };
 
@@ -66,6 +67,20 @@ const OfertaEspecial = () => {
               🔥 ÚLTIMA CHANCE: 50% DE DESCONTO EM TODOS OS PLANOS! 🔥
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* VSL Video */}
+      <div className="max-w-lg mx-auto px-4 pt-4">
+        <div style={{ padding: "179.81% 0 0 0", position: "relative" }}>
+          <iframe
+            src="https://player.vimeo.com/video/1162429038?badge=0&autopause=0&player_id=0&app_id=58479&loop=1"
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+            title="BACKREDIRECT"
+          />
         </div>
       </div>
 
@@ -109,7 +124,7 @@ const OfertaEspecial = () => {
           {plans.map((plan) => (
             <button
               key={plan.id}
-              onClick={() => handleSelectPlan(plan.id, plan.price)}
+              onClick={() => handleSelectPlan(plan.id, plan.priceInCents)}
               className="w-full bg-card border-2 border-border hover:border-primary rounded-xl p-4 transition-all duration-200 text-left relative overflow-hidden group"
             >
               {plan.badge && (

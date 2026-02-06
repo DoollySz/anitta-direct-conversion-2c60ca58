@@ -1,6 +1,9 @@
 import logoImage from "@/assets/logo.webp";
+import { useBackRedirect } from "@/hooks/useBackRedirect";
 
 const AgeVerification = () => {
+  // Back redirect to special offer page
+  useBackRedirect("/oferta-especial");
   const handleConfirmAge = () => {
     // Store verification in localStorage
     localStorage.setItem("age_verified", "true");
