@@ -14,6 +14,20 @@ const plans: Record<string, { name: string; price: number }> = {
   "vitalicio": { name: "Vitalício", price: 8790 },
 };
 
+// Helper to extract UTM and tracking params from URL
+const getTrackingParams = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return {
+    utm_source: urlParams.get("utm_source") || undefined,
+    utm_medium: urlParams.get("utm_medium") || undefined,
+    utm_campaign: urlParams.get("utm_campaign") || undefined,
+    utm_content: urlParams.get("utm_content") || undefined,
+    utm_term: urlParams.get("utm_term") || undefined,
+    src: urlParams.get("src") || undefined,
+    sck: urlParams.get("sck") || undefined,
+  };
+};
+
 const Checkout = () => {
   const { toast } = useToast();
   
@@ -50,15 +64,21 @@ const Checkout = () => {
   useEffect(() => {
     const generatePix = async () => {
       try {
+        const tracking = getTrackingParams();
+        console.log('Generating PIX with tracking:', tracking);
+        
         const { data, error } = await supabase.functions.invoke("create-pix", {
           body: {
             planId,
             planName: plan.name,
             amount: plan.price,
             customer: {
+              name: "Cliente Privacy",
               email: "cliente@privacy.com",
-              phone: "(11) 99999-9999",
+              document: "00000000000",
+              phone: "11999999999",
             },
+            tracking: tracking,
           },
         });
         
