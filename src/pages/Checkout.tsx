@@ -3,6 +3,7 @@ import { Copy, Check, Loader2, CheckCircle, Shield, Lock, CheckSquare, ShieldChe
 import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { trackInitiateCheckout, trackAddPaymentInfo, trackPurchase } from "@/lib/utmify";
 import checkoutBanner1 from "@/assets/checkout-banner1.png";
 import checkoutBanner2 from "@/assets/checkout-banner2.png";
 import pixLogo from "@/assets/pix-logo.png";
@@ -55,10 +56,13 @@ const Checkout = () => {
   const [timeLeft, setTimeLeft] = useState(480);
   const [timerExpired, setTimerExpired] = useState(false);
 
-  // Scroll to top on mount
+  // Scroll to top and track InitiateCheckout on mount
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+    // Fire InitiateCheckout event for UTMify
+    const priceInBRL = plan.price / 100;
+    trackInitiateCheckout(priceInBRL);
+  }, [plan.price]);
 
   // Generate PIX automatically on mount
   useEffect(() => {
@@ -90,6 +94,9 @@ const Checkout = () => {
             transaction_id: data.transaction_id,
             expires_at: data.expires_at,
           });
+          // Fire AddPaymentInfo event when PIX is generated
+          const priceInBRL = plan.price / 100;
+          trackAddPaymentInfo(priceInBRL);
         } else {
           throw new Error(data.error || "Erro ao gerar PIX");
         }
@@ -150,6 +157,9 @@ const Checkout = () => {
         });
         
         if (!error && data.status === "approved") {
+          // Fire Purchase event for UTMify
+          const priceInBRL = plan.price / 100;
+          trackPurchase(priceInBRL, pixData.transaction_id.toString());
           setStep("success");
           clearInterval(interval);
         }
