@@ -5,13 +5,6 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface CustomerData {
-  name: string;
-  email: string;
-  document: string;
-  phone: string;
-}
-
 interface TrackingData {
   utm_source?: string;
   utm_medium?: string;
@@ -26,12 +19,85 @@ interface CreatePixRequest {
   planId: string;
   planName: string;
   amount: number;
-  customer: CustomerData;
   tracking?: TrackingData;
 }
 
+// ---- Random valid data generators ----
+
+const firstNames = [
+  "Ana", "Maria", "João", "Pedro", "Lucas", "Juliana", "Fernanda", "Carlos",
+  "Rafael", "Mariana", "Gabriel", "Beatriz", "Bruno", "Camila", "Diego",
+  "Larissa", "Felipe", "Amanda", "Rodrigo", "Patricia", "Gustavo", "Leticia",
+  "Thiago", "Vanessa", "Leonardo", "Isabela", "Matheus", "Natalia", "Daniel",
+  "Aline", "Eduardo", "Bruna", "Henrique", "Carla", "Vinicius", "Renata",
+];
+
+const lastNames = [
+  "Silva", "Santos", "Oliveira", "Souza", "Rodrigues", "Ferreira", "Alves",
+  "Pereira", "Lima", "Gomes", "Costa", "Ribeiro", "Martins", "Carvalho",
+  "Almeida", "Lopes", "Soares", "Fernandes", "Vieira", "Barbosa", "Rocha",
+  "Dias", "Nascimento", "Andrade", "Moreira", "Nunes", "Marques", "Machado",
+  "Mendes", "Freitas", "Cardoso", "Ramos", "Gonçalves", "Santana", "Teixeira",
+];
+
+const emailProviders = ["gmail.com", "gmail.com", "gmail.com", "hotmail.com", "outlook.com"];
+
+function randomItem<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateRandomName(): string {
+  return `${randomItem(firstNames)} ${randomItem(lastNames)}`;
+}
+
+function generateRandomEmail(name: string): string {
+  const clean = name
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, ".");
+  const num = Math.floor(Math.random() * 9000) + 1000;
+  return `${clean}${num}@${randomItem(emailProviders)}`;
+}
+
+function generateValidCPF(): string {
+  const digits: number[] = [];
+  for (let i = 0; i < 9; i++) {
+    digits.push(Math.floor(Math.random() * 10));
+  }
+
+  // First check digit
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += digits[i] * (10 - i);
+  }
+  let rest = (sum * 10) % 11;
+  if (rest === 10) rest = 0;
+  digits.push(rest);
+
+  // Second check digit
+  sum = 0;
+  for (let i = 0; i < 10; i++) {
+    sum += digits[i] * (11 - i);
+  }
+  rest = (sum * 10) % 11;
+  if (rest === 10) rest = 0;
+  digits.push(rest);
+
+  return digits.join("");
+}
+
+function generateValidPhone(): string {
+  const ddd = [11, 21, 31, 41, 51, 61, 71, 81, 85, 27, 48, 47, 19, 15, 13, 12][
+    Math.floor(Math.random() * 16)
+  ];
+  const num = Math.floor(Math.random() * 90000000) + 10000000;
+  return `${ddd}9${num}`;
+}
+
+// ---- Main handler ----
+
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -48,36 +114,41 @@ serve(async (req) => {
       );
     }
 
-    const { planId, planName, amount, customer, tracking }: CreatePixRequest = await req.json();
+    const { planId, planName, amount, tracking }: CreatePixRequest = await req.json();
 
-    console.log('Creating PIX transaction:', { planId, planName, amount, customer, tracking });
-
-    // Validate required fields
-    if (!planId || !amount || !customer?.name || !customer?.email || !customer?.document || !customer?.phone) {
+    if (!planId || !amount) {
       return new Response(
-        JSON.stringify({ error: 'Dados incompletos. Preencha todos os campos.' }),
+        JSON.stringify({ error: 'Dados incompletos.' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Generate unique reference
+    // Generate random valid customer data
+    const name = generateRandomName();
+    const email = generateRandomEmail(name);
+    const document = generateValidCPF();
+    const phone = generateValidPhone();
+
+    console.log('Creating PIX transaction with random customer:', {
+      planId, planName, amount,
+      customer: { name, email, document: document.slice(0, 3) + '***', phone: phone.slice(0, 4) + '***' },
+    });
+
     const reference = `ANITTA-${planId}-${Date.now()}`;
 
-    // Build request body according to Paradise API docs
     const requestBody: Record<string, unknown> = {
-      amount: amount, // Already in cents
+      amount: amount,
       description: `Assinatura Anitta Privacy - ${planName}`,
       reference: reference,
       productHash: productHash,
       customer: {
-        name: customer.name,
-        email: customer.email,
-        document: customer.document.replace(/\D/g, ''), // Numbers only
-        phone: customer.phone.replace(/\D/g, ''), // Numbers only
+        name,
+        email,
+        document,
+        phone,
       },
     };
 
-    // Add tracking data if provided (UTMs for Utmify integration)
     if (tracking && Object.keys(tracking).some(key => tracking[key as keyof TrackingData])) {
       requestBody.tracking = {
         utm_source: tracking.utm_source || '',
@@ -91,7 +162,6 @@ serve(async (req) => {
       console.log('Tracking data included:', requestBody.tracking);
     }
 
-    // Create transaction with Paradise API
     const response = await fetch('https://multi.paradisepags.com/api/v1/transaction.php', {
       method: 'POST',
       headers: {
