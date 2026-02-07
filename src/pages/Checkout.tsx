@@ -4,7 +4,6 @@ import { QRCodeSVG } from "qrcode.react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useBackRedirect } from "@/hooks/useBackRedirect";
-import CustomerForm from "@/components/CustomerForm";
 import checkoutBanner1 from "@/assets/checkout-banner1.png";
 import checkoutBanner2 from "@/assets/checkout-banner2.png";
 import pixLogo from "@/assets/pix-logo.png";
@@ -44,10 +43,9 @@ const Checkout = () => {
     price: promoPrice ? parseInt(promoPrice, 10) : basePlan.price,
   };
   
-  const [step, setStep] = useState<"form" | "pix" | "success">("form");
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<"pix" | "success">("pix");
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [customerData, setCustomerData] = useState<{ name: string; email: string; document: string } | null>(null);
   const [pixData, setPixData] = useState<{
     qr_code: string;
     transaction_id: number;
@@ -66,53 +64,46 @@ const Checkout = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Generate PIX after customer submits form
-  const handleCustomerSubmit = async (data: { name: string; email: string; document: string }) => {
-    setCustomerData(data);
-    setLoading(true);
-    setStep("pix");
-
-    try {
-      const tracking = getTrackingParams();
-      console.log('Generating PIX with tracking:', tracking);
-      
-      const { data: pixResponse, error } = await supabase.functions.invoke("create-pix", {
-        body: {
-          planId,
-          planName: plan.name,
-          amount: plan.price,
-          customer: {
-            name: data.name,
-            email: data.email,
-            document: data.document,
-            phone: "00000000000",
+  // Generate PIX automatically on mount
+  useEffect(() => {
+    const generatePix = async () => {
+      try {
+        const tracking = getTrackingParams();
+        
+        const { data, error } = await supabase.functions.invoke("create-pix", {
+          body: {
+            planId,
+            planName: plan.name,
+            amount: plan.price,
+            tracking: tracking,
           },
-          tracking: tracking,
-        },
-      });
-      
-      if (error) throw error;
-      
-      if (pixResponse.success) {
-        setPixData({
-          qr_code: pixResponse.qr_code,
-          transaction_id: pixResponse.transaction_id,
-          expires_at: pixResponse.expires_at,
         });
-      } else {
-        throw new Error(pixResponse.error || "Erro ao gerar PIX");
+        
+        if (error) throw error;
+        
+        if (data.success) {
+          setPixData({
+            qr_code: data.qr_code,
+            transaction_id: data.transaction_id,
+            expires_at: data.expires_at,
+          });
+        } else {
+          throw new Error(data.error || "Erro ao gerar PIX");
+        }
+      } catch (error: any) {
+        console.error("Error creating PIX:", error);
+        toast({
+          title: "Erro ao gerar PIX",
+          description: "Recarregue a página e tente novamente.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error: any) {
-      console.error("Error creating PIX:", error);
-      toast({
-        title: "Erro ao gerar PIX",
-        description: "Tente novamente.",
-        variant: "destructive",
-      });
-      setStep("form");
-    } finally {
-      setLoading(false);
-    }
+    };
+
+    generatePix();
+  }, [planId, plan.name, plan.price, toast]);
   };
 
   useEffect(() => {
@@ -256,7 +247,7 @@ const Checkout = () => {
           />
         </div>
 
-        {step === "form" && (
+        {step === "pix" && (
           <div className="space-y-6">
             {/* Benefits Section */}
             <div className="bg-card border border-primary/30 rounded-xl p-4">
@@ -290,35 +281,6 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-
-            {/* Customer Form */}
-            <CustomerForm onSubmit={handleCustomerSubmit} loading={loading} />
-
-            {/* Secure Payment Text */}
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Lock className="w-4 h-4" />
-              <span>Pagamento seguro via PIX com aprovação imediata.</span>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="bg-card border border-border rounded-xl p-4 space-y-4">
-              {trustBadges.map((badge, index) => (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
-                    <badge.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-foreground text-sm">{badge.title}</p>
-                    <p className="text-muted-foreground text-xs">{badge.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {step === "pix" && (
-          <div className="space-y-6">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12 space-y-4">
                 <Loader2 className="w-10 h-10 animate-spin text-primary" />
