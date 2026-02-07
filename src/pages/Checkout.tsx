@@ -104,7 +104,6 @@ const Checkout = () => {
 
     generatePix();
   }, [planId, plan.name, plan.price, toast]);
-  };
 
   useEffect(() => {
     const timer = setInterval(() => {
